@@ -13,7 +13,7 @@
   <ItemGroup>
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.0.1641" />
     <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.0.1641" />
-    <PackageReference Include="Apos.Input" Version="2.1.0" />
+    <PackageReference Include="Apos.Input" Version="2.3.2" />
     <ProjectReference Include="../../../Source/Apos.Batch.csproj">
       <NoWarn>CS1591</NoWarn>
     </ProjectReference>
