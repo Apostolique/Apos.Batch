@@ -36,21 +36,25 @@ namespace Apos.Batch {
             _texture = texture;
 
             // TODO: world shouldn't be null.
-            if (world != null) {
-                world = Num.Matrix3x2.CreateScale(texture.Width, texture.Height) * world.Value;
-            } else {
-                world = Num.Matrix3x2.CreateScale(texture.Width, texture.Height);
+            if (world == null) {
+                world = Num.Matrix3x2.Identity;
             }
 
-            Num.Vector2 topLeft = Num.Vector2.Transform(new Num.Vector2(0, 0), world.Value);
-            Num.Vector2 topRight = Num.Vector2.Transform(new Num.Vector2(1, 0), world.Value);
-            Num.Vector2 bottomRight = Num.Vector2.Transform(new Num.Vector2(1, 1), world.Value);
-            Num.Vector2 bottomLeft = Num.Vector2.Transform(new Num.Vector2(0, 1), world.Value);
+            // TODO: Use a source rectangle to get the values.
+            Num.Vector2 topLeft = new Num.Vector2(0, 0);
+            Num.Vector2 topRight = new Num.Vector2(texture.Width, 0);
+            Num.Vector2 bottomRight = new Num.Vector2(texture.Width, texture.Height);
+            Num.Vector2 bottomLeft = new Num.Vector2(0, texture.Height);
 
-            _vertices[_vertexCount + 0] = new VertexPositionColorTexture(new Vector3(topLeft.X, topLeft.Y, 0f), Color.White, new Vector2(0, 0));
-            _vertices[_vertexCount + 1] = new VertexPositionColorTexture(new Vector3(topRight.X, topRight.Y, 0f), Color.White, new Vector2(1, 0));
-            _vertices[_vertexCount + 2] = new VertexPositionColorTexture(new Vector3(bottomRight.X, bottomRight.Y, 0f), Color.White, new Vector2(1, 1));
-            _vertices[_vertexCount + 3] = new VertexPositionColorTexture(new Vector3(bottomLeft.X, bottomLeft.Y, 0f), Color.White, new Vector2(0, 1));
+            Num.Vector2 wTopLeft = Num.Vector2.Transform(topLeft, world.Value);
+            Num.Vector2 wTopRight = Num.Vector2.Transform(topRight, world.Value);
+            Num.Vector2 wBottomRight = Num.Vector2.Transform(bottomRight, world.Value);
+            Num.Vector2 wBottomLeft = Num.Vector2.Transform(bottomLeft, world.Value);
+
+            _vertices[_vertexCount + 0] = new VertexPositionColorTexture(new Vector3(wTopLeft.X, wTopLeft.Y, 0f), Color.White, GetUV(texture, topLeft));
+            _vertices[_vertexCount + 1] = new VertexPositionColorTexture(new Vector3(wTopRight.X, wTopRight.Y, 0f), Color.White, GetUV(texture, topRight));
+            _vertices[_vertexCount + 2] = new VertexPositionColorTexture(new Vector3(wBottomRight.X, wBottomRight.Y, 0f), Color.White, GetUV(texture, bottomRight));
+            _vertices[_vertexCount + 3] = new VertexPositionColorTexture(new Vector3(wBottomLeft.X, wBottomLeft.Y, 0f), Color.White, GetUV(texture, bottomLeft));
 
             _triangleCount += 2;
             _vertexCount += 4;
@@ -87,8 +91,8 @@ namespace Apos.Batch {
             _vertexCount = 0;
             _indexCount = 0;
         }
-        private Vector2 GetUV(Texture2D texture, float x, float y) {
-            return new Vector2(x / texture.Width, y / texture.Height);
+        private Vector2 GetUV(Texture2D texture, Num.Vector2 xy) {
+            return new Vector2(xy.X / texture.Width, xy.Y / texture.Height);
         }
         private void ResetProjection() {
             int width = _graphicsDevice.Viewport.Width;
