@@ -29,7 +29,9 @@ namespace Apos.Batch {
                 _view = Matrix.Identity;
             }
 
-            ResetProjection();
+            int width = _graphicsDevice.Viewport.Width;
+            int height = _graphicsDevice.Viewport.Height;
+            _projection = Matrix.CreateOrthographicOffCenter(0, width, height, 0, 0, 1);
         }
         public void Draw(Texture2D texture, Num.Matrix3x2? world = null) {
             // TODO: A Texture swap means a batch Flush.
@@ -94,11 +96,6 @@ namespace Apos.Batch {
         }
         private Vector2 GetUV(Texture2D texture, Num.Vector2 xy) {
             return new Vector2(xy.X / texture.Width, xy.Y / texture.Height);
-        }
-        private void ResetProjection() {
-            int width = _graphicsDevice.Viewport.Width;
-            int height = _graphicsDevice.Viewport.Height;
-            _projection = Matrix.CreateOrthographicOffCenter(0, width, height, 0, 0, 1);
         }
         private static short[] GenerateIndexArray() {
             short[] result = new short[MAX_INDICES];
