@@ -7,8 +7,8 @@
 #define PS_SHADERMODEL ps_4_0_level_9_1
 #endif
 
-sampler TextureSampler : register(s0);
 float4x4 view_projection;
+sampler TextureSampler : register(s0);
 
 struct Vertex {
     float4 Position : SV_Position0;

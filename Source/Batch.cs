@@ -80,10 +80,11 @@ namespace Apos.Batch {
             _graphicsDevice.BlendState = BlendState.AlphaBlend;
 
             _effect.Parameters["view_projection"].SetValue(_view * _projection);
-            _graphicsDevice.Textures[0] = _texture;
 
             foreach (EffectPass pass in _effect.CurrentTechnique.Passes) {
                 pass.Apply();
+                _graphicsDevice.Textures[0] = _texture;
+
                 _graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, _triangleCount);
             }
 
