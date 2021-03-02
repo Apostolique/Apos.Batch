@@ -1,13 +1,13 @@
 using Num = System.Numerics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 
 namespace Apos.Batch {
     public class Batch {
         public Batch(GraphicsDevice graphicsDevice, Effect effect) {
             _graphicsDevice = graphicsDevice;
-            _effect = effect;
+            _defaultEffect = effect;
+            _defaultPass = effect.CurrentTechnique.Passes[0];
             _vertices = new VertexPositionColorTexture[MAX_VERTICES];
             _indices = GenerateIndexArray();
 
@@ -22,11 +22,18 @@ namespace Apos.Batch {
         //       Textures
         //       Shaders
 
-        public void Begin(Matrix? view = null) {
+        public void Begin(Matrix? view = null, Effect? effect = null) {
             if (view != null) {
                 _view = view.Value;
             } else {
                 _view = Matrix.Identity;
+            }
+            if (effect != null) {
+                _effect = effect;
+                _customEffect = true;
+            } else {
+                _effect = _defaultEffect;
+                _customEffect = false;
             }
 
             int width = _graphicsDevice.Viewport.Width;
@@ -76,6 +83,10 @@ namespace Apos.Batch {
         private void Flush() {
             if (_triangleCount == 0) return;
 
+            _defaultEffect.Parameters["view_projection"]?.SetValue(_view * _projection);
+            // Apply the default pass in case a custom shader doesn't provide a vertex shader.
+            _defaultPass.Apply();
+
             _vertexBuffer.SetData(_vertices);
             _graphicsDevice.SetVertexBuffer(_vertexBuffer);
             _graphicsDevice.Indices = _indexBuffer;
@@ -84,12 +95,15 @@ namespace Apos.Batch {
             _graphicsDevice.DepthStencilState = DepthStencilState.None;
             _graphicsDevice.BlendState = BlendState.AlphaBlend;
 
-            _effect.Parameters["view_projection"].SetValue(_view * _projection);
+            if (_customEffect) {
+                foreach (EffectPass pass in _effect.CurrentTechnique.Passes) {
+                    pass.Apply();
+                    _graphicsDevice.Textures[0] = _texture;
 
-            foreach (EffectPass pass in _effect.CurrentTechnique.Passes) {
-                pass.Apply();
+                    _graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, _triangleCount);
+                }
+            } else {
                 _graphicsDevice.Textures[0] = _texture;
-
                 _graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, _triangleCount);
             }
 
@@ -135,6 +149,9 @@ namespace Apos.Batch {
 
         Matrix _view;
         Matrix _projection;
+        Effect _defaultEffect;
+        EffectPass _defaultPass;
         Effect _effect;
+        bool _customEffect = false;
     }
 }
