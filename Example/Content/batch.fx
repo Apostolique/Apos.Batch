@@ -17,12 +17,12 @@ struct Vertex {
 };
 
 Vertex SpriteVertexShader(Vertex v) {
-    Vertex Output;
+    Vertex output;
 
-    Output.Position = mul(v.Position, view_projection);
-    Output.Color = v.Color;
-    Output.TexCoord = v.TexCoord;
-    return Output;
+    output.Position = mul(v.Position, view_projection);
+    output.Color = v.Color;
+    output.TexCoord = v.TexCoord;
+    return output;
 }
 float4 SpritePixelShader(Vertex v): COLOR0 {
     float4 diffuse = tex2D(TextureSampler, v.TexCoord.xy);
