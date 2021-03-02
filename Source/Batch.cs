@@ -35,7 +35,10 @@ namespace Apos.Batch {
         }
         public void Draw(Texture2D texture, Num.Matrix3x2? world = null) {
             // TODO: A Texture swap means a batch Flush.
-            _texture = texture;
+            if (_texture != texture) {
+                _texture = texture;
+                Flush();
+            }
 
             // TODO: world shouldn't be null.
             if (world == null) {
