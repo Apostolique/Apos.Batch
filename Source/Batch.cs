@@ -14,7 +14,7 @@ namespace Apos.Batch {
             _vertexBuffer = new DynamicVertexBuffer(_graphicsDevice, typeof(VertexPositionColorTexture), _vertices.Length, BufferUsage.WriteOnly);
             _vertexBuffer.SetData(_vertices);
 
-            _indexBuffer = new DynamicIndexBuffer(_graphicsDevice, typeof(short), _indices.Length, BufferUsage.WriteOnly);
+            _indexBuffer = new IndexBuffer(_graphicsDevice, typeof(short), _indices.Length, BufferUsage.WriteOnly);
             _indexBuffer.SetData(_indices);
         }
 
@@ -128,7 +128,7 @@ namespace Apos.Batch {
         Texture2D _texture;
 
         DynamicVertexBuffer _vertexBuffer;
-        DynamicIndexBuffer _indexBuffer;
+        IndexBuffer _indexBuffer;
 
         Matrix _view;
         Matrix _projection;
