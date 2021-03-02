@@ -31,6 +31,12 @@
 /processorParam:DebugMode=Auto
 /build:batch.fx
 
+#begin custom.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:custom.fx
+
 #begin source-code-pro-medium.ttf
 /copy:source-code-pro-medium.ttf
 
