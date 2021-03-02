@@ -5,6 +5,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>Example</AssemblyName>
     <MonoGamePlatform>Windows</MonoGamePlatform>
+    <Nullable>enable</Nullable>
     <PublishTrimmed>true</PublishTrimmed>
     <PublishReadyToRun>false</PublishReadyToRun>
     <TieredCompilation>false</TieredCompilation>
