@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Apos.Batch {
+    // TODO: Have the VertexBuffer and IndexBuffer auto resize.
     public class Batch {
         public Batch(GraphicsDevice graphicsDevice, Effect effect) {
             _graphicsDevice = graphicsDevice;

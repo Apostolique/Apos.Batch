@@ -59,14 +59,14 @@ namespace GameProject {
             _fps.Draw(gameTime);
             GraphicsDevice.Clear(Color.Black);
 
-            _b.Begin(effect: _custom);
+            _b.Begin();
             for (int i = 0; i < 10000; i++) {
-                _b.Draw(_apos, Num.Matrix3x2.CreateTranslation(_random.Next(0, GraphicsDevice.PresentationParameters.BackBufferWidth - 200), _random.Next(0, GraphicsDevice.PresentationParameters.BackBufferHeight - 200)));
+                _b.Draw(_apos, Num.Matrix3x2.CreateTranslation(_random.Next(0, GraphicsDevice.PresentationParameters.BackBufferWidth), _random.Next(0, GraphicsDevice.PresentationParameters.BackBufferHeight)));
             }
             _b.End();
             // _s.Begin();
             // for (int i = 0; i < 1000; i++) {
-            //     _s.Draw(_apos, new Rectangle(_random.Next(0, GraphicsDevice.Viewport.Width - 200), _random.Next(0, GraphicsDevice.Viewport.Height - 200), _apos.Width, _apos.Height), Color.White);
+            //     _s.Draw(_apos, new Rectangle(_random.Next(0, GraphicsDevice.Viewport.Width), _random.Next(0, GraphicsDevice.Viewport.Height), _apos.Width, _apos.Height), Color.White);
             // }
             // _s.End();
 
