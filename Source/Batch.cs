@@ -9,11 +9,11 @@ namespace Apos.Batch {
             _graphicsDevice = graphicsDevice;
             _defaultEffect = effect;
             _defaultPass = effect.CurrentTechnique.Passes[0];
+
             _vertices = new VertexPositionColorTexture[MAX_VERTICES];
             _indices = GenerateIndexArray();
 
             _vertexBuffer = new DynamicVertexBuffer(_graphicsDevice, typeof(VertexPositionColorTexture), _vertices.Length, BufferUsage.WriteOnly);
-            _vertexBuffer.SetData(_vertices);
 
             _indexBuffer = new IndexBuffer(_graphicsDevice, typeof(short), _indices.Length, BufferUsage.WriteOnly);
             _indexBuffer.SetData(_indices);
@@ -23,7 +23,7 @@ namespace Apos.Batch {
         //       Textures
         //       Shaders
 
-        public void Begin(Matrix? view = null, Effect? effect = null) {
+        public void Begin(Matrix? view = null, Matrix? projection = null, Effect? effect = null) {
             if (view != null) {
                 _view = view.Value;
             } else {
@@ -37,9 +37,12 @@ namespace Apos.Batch {
                 _customEffect = false;
             }
 
-            int width = _graphicsDevice.Viewport.Width;
-            int height = _graphicsDevice.Viewport.Height;
-            _projection = Matrix.CreateOrthographicOffCenter(0, width, height, 0, 0, 1);
+            if (projection != null) {
+                _projection = projection.Value;
+            } else {
+                Viewport viewport = _graphicsDevice.Viewport;
+                _projection = Matrix.CreateOrthographicOffCenter(0, viewport.Width, viewport.Height, 0, 0, 1);
+            }
         }
         public void Draw(Texture2D texture, Num.Matrix3x2? world = null) {
             // TODO: A Texture swap means a batch Flush.
@@ -64,10 +67,10 @@ namespace Apos.Batch {
             Num.Vector2 wBottomRight = Num.Vector2.Transform(bottomRight, world.Value);
             Num.Vector2 wBottomLeft = Num.Vector2.Transform(bottomLeft, world.Value);
 
-            _vertices[_vertexCount + 0] = new VertexPositionColorTexture(new Vector3(wTopLeft.X, wTopLeft.Y, 0f), Color.White, GetUV(texture, topLeft));
-            _vertices[_vertexCount + 1] = new VertexPositionColorTexture(new Vector3(wTopRight.X, wTopRight.Y, 0f), Color.White, GetUV(texture, topRight));
-            _vertices[_vertexCount + 2] = new VertexPositionColorTexture(new Vector3(wBottomRight.X, wBottomRight.Y, 0f), Color.White, GetUV(texture, bottomRight));
-            _vertices[_vertexCount + 3] = new VertexPositionColorTexture(new Vector3(wBottomLeft.X, wBottomLeft.Y, 0f), Color.White, GetUV(texture, bottomLeft));
+            _vertices[_vertexCount + 0] = new VertexPositionColorTexture(new Vector3(wTopLeft.X, wTopLeft.Y, 0f), Color.White, _topLeft);
+            _vertices[_vertexCount + 1] = new VertexPositionColorTexture(new Vector3(wTopRight.X, wTopRight.Y, 0f), Color.White, _topRight);
+            _vertices[_vertexCount + 2] = new VertexPositionColorTexture(new Vector3(wBottomRight.X, wBottomRight.Y, 0f), Color.White, _bottomRight);
+            _vertices[_vertexCount + 3] = new VertexPositionColorTexture(new Vector3(wBottomLeft.X, wBottomLeft.Y, 0f), Color.White, _bottomLeft);
 
             _triangleCount += 2;
             _vertexCount += 4;
@@ -79,6 +82,8 @@ namespace Apos.Batch {
         }
         public void End() {
             Flush();
+
+            // TODO: Restore old states like rasterizer, depth stencil, blend state?
         }
 
         private void Flush() {
@@ -112,9 +117,7 @@ namespace Apos.Batch {
             _vertexCount = 0;
             _indexCount = 0;
         }
-        private Vector2 GetUV(Texture2D texture, Num.Vector2 xy) {
-            return new Vector2(xy.X / texture.Width, xy.Y / texture.Height);
-        }
+
         private static short[] GenerateIndexArray() {
             short[] result = new short[MAX_INDICES];
             for (int i = 0, j = 0; i < MAX_INDICES; i += 6, j += 4) {
@@ -154,5 +157,10 @@ namespace Apos.Batch {
         EffectPass _defaultPass;
         Effect _effect;
         bool _customEffect = false;
+
+        Vector2 _topLeft = new Vector2(0, 0);
+        Vector2 _topRight = new Vector2(1, 0);
+        Vector2 _bottomRight = new Vector2(1, 1);
+        Vector2 _bottomLeft = new Vector2(0, 1);
     }
 }
