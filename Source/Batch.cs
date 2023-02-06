@@ -11,13 +11,13 @@ namespace Apos.Batch {
             _defaultPass = effect.CurrentTechnique.Passes[0];
 
             _vertices = new VertexPositionColorTexture[_initialVertices];
-            _indices = new ushort[_initialIndices];
+            _indices = new uint[_initialIndices];
 
             GenerateIndexArray(ref _indices, 0);
 
             _vertexBuffer = new DynamicVertexBuffer(_graphicsDevice, typeof(VertexPositionColorTexture), _vertices.Length, BufferUsage.WriteOnly);
 
-            _indexBuffer = new IndexBuffer(_graphicsDevice, typeof(ushort), _indices.Length, BufferUsage.WriteOnly);
+            _indexBuffer = new IndexBuffer(_graphicsDevice, typeof(uint), _indices.Length, BufferUsage.WriteOnly);
             _indexBuffer.SetData(_indices);
         }
 
@@ -109,7 +109,7 @@ namespace Apos.Batch {
 
                 GenerateIndexArray(ref _indices, _fromIndex);
 
-                _indexBuffer = new IndexBuffer(_graphicsDevice, typeof(ushort), _indices.Length, BufferUsage.WriteOnly);
+                _indexBuffer = new IndexBuffer(_graphicsDevice, typeof(uint), _indices.Length, BufferUsage.WriteOnly);
                 _indexBuffer.SetData(_indices);
 
                 _indicesChanged = false;
@@ -149,20 +149,20 @@ namespace Apos.Batch {
             return false;
         }
 
-        private void GenerateIndexArray(ref ushort[] array, int index = 0) {
-            int i = Floor(index, 6, 6);
-            int j = Floor(index, 6, 4);
+        private void GenerateIndexArray(ref uint[] array, int index = 0) {
+            uint i = Floor(index, 6, 6);
+            uint j = Floor(index, 6, 4);
             for (; i < array.Length; i += 6, j += 4) {
-                array[i + 0] = (ushort) (j + 0);
-                array[i + 1] = (ushort) (j + 1);
-                array[i + 2] = (ushort) (j + 3);
-                array[i + 3] = (ushort) (j + 1);
-                array[i + 4] = (ushort) (j + 2);
-                array[i + 5] = (ushort) (j + 3);
+                array[i + 0] = j + 0;
+                array[i + 1] = j + 1;
+                array[i + 2] = j + 3;
+                array[i + 3] = j + 1;
+                array[i + 4] = j + 2;
+                array[i + 5] = j + 3;
             }
         }
-        private static int Floor(int value, int div, int mul) {
-            return (int)MathF.Floor((float)value / div) * mul;
+        private uint Floor(int value, int div, uint mul) {
+            return (uint)MathF.Floor((float)value / div) * mul;
         }
 
         private int _initialSprites = 2048;
@@ -176,7 +176,7 @@ namespace Apos.Batch {
         };
 
         private VertexPositionColorTexture[] _vertices;
-        private ushort[] _indices;
+        private uint[] _indices;
         private int _triangleCount = 0;
         private int _vertexCount = 0;
         private int _indexCount = 0;
