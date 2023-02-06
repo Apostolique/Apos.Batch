@@ -1,21 +1,23 @@
 using Num = System.Numerics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace Apos.Batch {
-    // TODO: Have the VertexBuffer and IndexBuffer auto resize.
     public class Batch {
         public Batch(GraphicsDevice graphicsDevice, Effect effect) {
             _graphicsDevice = graphicsDevice;
             _defaultEffect = effect;
             _defaultPass = effect.CurrentTechnique.Passes[0];
 
-            _vertices = new VertexPositionColorTexture[MAX_VERTICES];
-            _indices = GenerateIndexArray();
+            _vertices = new VertexPositionColorTexture[_initialVertices];
+            _indices = new ushort[_initialIndices];
+
+            GenerateIndexArray(ref _indices, 0);
 
             _vertexBuffer = new DynamicVertexBuffer(_graphicsDevice, typeof(VertexPositionColorTexture), _vertices.Length, BufferUsage.WriteOnly);
 
-            _indexBuffer = new IndexBuffer(_graphicsDevice, typeof(short), _indices.Length, BufferUsage.WriteOnly);
+            _indexBuffer = new IndexBuffer(_graphicsDevice, typeof(ushort), _indices.Length, BufferUsage.WriteOnly);
             _indexBuffer.SetData(_indices);
         }
 
@@ -51,6 +53,16 @@ namespace Apos.Batch {
                 Flush();
             }
 
+            // if (_vertexCount + 4 > _vertices.Length) {
+            //     Flush();
+            // }
+
+            EnsureSizeOrDouble(ref _vertices, _vertexCount + 4);
+            if (EnsureSizeOrDouble(ref _indices, _indexCount + 6)) {
+                _fromIndex = _indexCount;
+                _indicesChanged = true;
+            }
+
             // TODO: world shouldn't be null.
             if (world == null) {
                 world = Num.Matrix3x2.Identity;
@@ -75,10 +87,6 @@ namespace Apos.Batch {
             _triangleCount += 2;
             _vertexCount += 4;
             _indexCount += 6;
-
-            if (_triangleCount >= MAX_TRIANGLES) {
-                Flush();
-            }
         }
         public void End() {
             Flush();
@@ -93,8 +101,23 @@ namespace Apos.Batch {
             // Apply the default pass in case a custom shader doesn't provide a vertex shader.
             _defaultPass.Apply();
 
+            if (_indicesChanged) {
+                _vertexBuffer.Dispose();
+                _indexBuffer.Dispose();
+
+                _vertexBuffer = new DynamicVertexBuffer(_graphicsDevice, typeof(VertexPositionColorTexture), _vertices.Length, BufferUsage.WriteOnly);
+
+                GenerateIndexArray(ref _indices, _fromIndex);
+
+                _indexBuffer = new IndexBuffer(_graphicsDevice, typeof(ushort), _indices.Length, BufferUsage.WriteOnly);
+                _indexBuffer.SetData(_indices);
+
+                _indicesChanged = false;
+            }
+
             _vertexBuffer.SetData(_vertices);
             _graphicsDevice.SetVertexBuffer(_vertexBuffer);
+
             _graphicsDevice.Indices = _indexBuffer;
 
             _graphicsDevice.RasterizerState = _rasterizerState;
@@ -118,49 +141,63 @@ namespace Apos.Batch {
             _indexCount = 0;
         }
 
-        private static short[] GenerateIndexArray() {
-            short[] result = new short[MAX_INDICES];
-            for (int i = 0, j = 0; i < MAX_INDICES; i += 6, j += 4) {
-                result[i + 0] = (short) (j + 0);
-                result[i + 1] = (short) (j + 1);
-                result[i + 2] = (short) (j + 3);
-                result[i + 3] = (short) (j + 1);
-                result[i + 4] = (short) (j + 2);
-                result[i + 5] = (short) (j + 3);
+        private bool EnsureSizeOrDouble<T>(ref T[] array, int neededCapacity) {
+            if (array.Length < neededCapacity) {
+                Array.Resize(ref array, array.Length * 2);
+                return true;
             }
-            return result;
+            return false;
         }
 
-        const int MAX_SPRITES = 2048;
-        const int MAX_TRIANGLES = 2048 * 2;
-        const int MAX_VERTICES = 2048 * 4;
-        const int MAX_INDICES = 2048 * 6;
+        private void GenerateIndexArray(ref ushort[] array, int index = 0) {
+            int i = Floor(index, 6, 6);
+            int j = Floor(index, 6, 4);
+            for (; i < array.Length; i += 6, j += 4) {
+                array[i + 0] = (ushort) (j + 0);
+                array[i + 1] = (ushort) (j + 1);
+                array[i + 2] = (ushort) (j + 3);
+                array[i + 3] = (ushort) (j + 1);
+                array[i + 4] = (ushort) (j + 2);
+                array[i + 5] = (ushort) (j + 3);
+            }
+        }
+        private static int Floor(int value, int div, int mul) {
+            return (int)MathF.Floor((float)value / div) * mul;
+        }
 
-        GraphicsDevice _graphicsDevice;
-        RasterizerState _rasterizerState = new RasterizerState {
+        private int _initialSprites = 2048;
+        private int _initialTriangles = 2048 * 2;
+        private int _initialVertices = 2048 * 4;
+        private int _initialIndices = 2048 * 6;
+
+        private GraphicsDevice _graphicsDevice;
+        private RasterizerState _rasterizerState = new RasterizerState {
             CullMode = CullMode.None
         };
 
-        VertexPositionColorTexture[] _vertices;
-        short[] _indices;
-        int _triangleCount = 0;
-        int _vertexCount = 0;
-        int _indexCount = 0;
-        Texture2D _texture;
+        private VertexPositionColorTexture[] _vertices;
+        private ushort[] _indices;
+        private int _triangleCount = 0;
+        private int _vertexCount = 0;
+        private int _indexCount = 0;
+        private Texture2D _texture;
 
-        DynamicVertexBuffer _vertexBuffer;
-        IndexBuffer _indexBuffer;
+        private DynamicVertexBuffer _vertexBuffer;
+        private IndexBuffer _indexBuffer;
 
-        Matrix _view;
-        Matrix _projection;
-        Effect _defaultEffect;
-        EffectPass _defaultPass;
-        Effect _effect;
-        bool _customEffect = false;
+        private Matrix _view;
+        private Matrix _projection;
+        private Effect _defaultEffect;
+        private EffectPass _defaultPass;
+        private Effect _effect;
+        private bool _customEffect = false;
 
-        Vector2 _topLeft = new Vector2(0, 0);
-        Vector2 _topRight = new Vector2(1, 0);
-        Vector2 _bottomRight = new Vector2(1, 1);
-        Vector2 _bottomLeft = new Vector2(0, 1);
+        private Vector2 _topLeft = new Vector2(0, 0);
+        private Vector2 _topRight = new Vector2(1, 0);
+        private Vector2 _bottomRight = new Vector2(1, 1);
+        private Vector2 _bottomLeft = new Vector2(0, 1);
+
+        private bool _indicesChanged = false;
+        private int _fromIndex = 0;
     }
 }
