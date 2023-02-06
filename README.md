@@ -1,2 +1,2 @@
 # Apos.Batch
-Modern SpriteBatch for MonoGame.
+Modern batcher for MonoGame.

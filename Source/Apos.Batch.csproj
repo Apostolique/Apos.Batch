@@ -2,21 +2,25 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
+    <Nullable>enable</Nullable>
+
     <PackageId>Apos.Batch</PackageId>
-    <Version>0.1.0</Version>
-    <Description>Modern SpriteBatch for MonoGame.</Description>
+    <Description>Modern batcher for MonoGame.</Description>
+    <PackageTags>gamedev;monogame;batch;spritebatch</PackageTags>
+
     <Authors>Jean-David Moisan</Authors>
     <Company>Vyne Enterprise Inc.</Company>
-    <Copyright>Copyright 2021</Copyright>
-    <PackageTags>gamedev;monogame;batch;spritebatch</PackageTags>
-    <PackageIcon>Icon.png</PackageIcon>
+    <Copyright>Copyright 2023</Copyright>
+
     <RepositoryUrl>https://github.com/Apostolique/Apos.Batch</RepositoryUrl>
     <PackageProjectUrl>https://github.com/Apostolique/Apos.Batch</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <RepositoryType>git</RepositoryType>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+
+    <PackageIcon>Icon.png</PackageIcon>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
