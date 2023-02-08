@@ -190,10 +190,10 @@ namespace Apos.Batch {
             return (uint)MathF.Floor((float)value / div) * mul;
         }
 
-        private int _initialSprites = 2048;
-        private int _initialTriangles = 2048 * 2;
-        private int _initialVertices = 2048 * 4;
-        private int _initialIndices = 2048 * 6;
+        private const int _initialSprites = 2048;
+        private const int _initialTriangles = _initialSprites * 2;
+        private const int _initialVertices = _initialSprites * 4;
+        private const int _initialIndices = _initialSprites * 6;
 
         private GraphicsDevice _graphicsDevice;
         private RasterizerState _rasterizerState = new RasterizerState {
