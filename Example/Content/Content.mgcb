@@ -25,12 +25,6 @@
 /processorParam:TextureFormat=Color
 /build:apos.png
 
-#begin batch.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:batch.fx
-
 #begin custom.fx
 /importer:EffectImporter
 /processor:EffectProcessor

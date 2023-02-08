@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Apos.Input;
 using Apos.Batch;
-using Num = System.Numerics;
 using System;
 using FontStashSharp;
 using MonoGame.Extended;
@@ -32,9 +31,8 @@ namespace GameProject {
 
             _apos = Content.Load<Texture2D>("apos");
             _s = new SpriteBatch(GraphicsDevice);
-            _effect = Content.Load<Effect>("batch");
             _custom = Content.Load<Effect>("custom");
-            _b = new Batch(GraphicsDevice, _effect);
+            _b = new Batch(GraphicsDevice, Content);
 
             _random = new Random();
             _fps = new FPSCounter();
@@ -60,12 +58,13 @@ namespace GameProject {
             GraphicsDevice.Clear(Color.Black);
 
             _b.Begin();
-            for (int i = 0; i < 10000; i++) {
-                _b.Draw(_apos, Num.Matrix3x2.CreateTranslation(_random.Next(0, GraphicsDevice.PresentationParameters.BackBufferWidth), _random.Next(0, GraphicsDevice.PresentationParameters.BackBufferHeight)));
-            }
+            _b.Draw(_apos, Matrix32.CreateTranslation(GraphicsDevice.PresentationParameters.BackBufferWidth / 2f, GraphicsDevice.PresentationParameters.BackBufferHeight / 2f), Matrix32.CreateScale(60, 60));
+            // for (int i = 0; i < 20000; i++) {
+            //     _b.Draw(_apos, Matrix32.CreateTranslation(_random.Next(0, GraphicsDevice.PresentationParameters.BackBufferWidth), _random.Next(0, GraphicsDevice.PresentationParameters.BackBufferHeight)));
+            // }
             _b.End();
             // _s.Begin();
-            // for (int i = 0; i < 1000; i++) {
+            // for (int i = 0; i < 20000; i++) {
             //     _s.Draw(_apos, new Rectangle(_random.Next(0, GraphicsDevice.Viewport.Width), _random.Next(0, GraphicsDevice.Viewport.Height), _apos.Width, _apos.Height), Color.White);
             // }
             // _s.End();
@@ -94,7 +93,6 @@ namespace GameProject {
             );
 
         Texture2D _apos;
-        Effect _effect;
         Effect _custom;
 
         FPSCounter _fps;

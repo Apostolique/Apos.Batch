@@ -2,13 +2,17 @@ using Num = System.Numerics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using Microsoft.Xna.Framework.Content;
 
 namespace Apos.Batch {
     public class Batch {
-        public Batch(GraphicsDevice graphicsDevice, Effect effect) {
+        public Batch(GraphicsDevice graphicsDevice, ContentManager content) {
             _graphicsDevice = graphicsDevice;
-            _defaultEffect = effect;
-            _defaultPass = effect.CurrentTechnique.Passes[0];
+
+            _effect = content.Load<Effect>("apos-batch");
+
+            _defaultEffect = _effect;
+            _defaultPass = _effect.CurrentTechnique.Passes[0];
 
             _vertices = new VertexPositionColorTexture[_initialVertices];
             _indices = new uint[_initialIndices];

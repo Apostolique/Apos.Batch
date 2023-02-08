@@ -35,6 +35,23 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Apos.Batch.props" PackagePath="build/" />
+
+    <None Include="Content/apos-batch.fx">
+      <Pack>true</Pack>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+      <PackageFlatten>true</PackageFlatten>
+      <PackagePath>build/Content/</PackagePath>
+    </None>
+    <None Include="Content/Content.mgcb">
+      <Pack>true</Pack>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+      <PackageFlatten>true</PackageFlatten>
+      <PackagePath>build/Content/</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <SourceRoot Include="$(MSBuildThisFileDirectory)/"/>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
       <PrivateAssets>all</PrivateAssets>

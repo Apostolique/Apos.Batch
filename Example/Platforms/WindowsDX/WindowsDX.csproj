@@ -24,6 +24,8 @@
     </ProjectReference>
   </ItemGroup>
 
+  <Import Project="../../../Source/Apos.Batch.props" />
+
   <ItemGroup>
     <Compile Include="../../Game/**/*.cs">
       <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>

@@ -1,0 +1,13 @@
+<Project>
+
+  <PropertyGroup>
+    <AposBatchPath>$([System.IO.Path]::Combine($(MSBuildThisFileDirectory),"Content/Content.mgcb"))</AposBatchPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <MonoGameContentReference Include="$(AposBatchPath)">
+      <Link>Content/%(RecursiveDir)%(Filename)%(Extension)</Link>
+    </MonoGameContentReference>
+  </ItemGroup>
+
+</Project>
