@@ -50,7 +50,7 @@ namespace Apos.Batch {
                 _projection = Matrix.CreateOrthographicOffCenter(0, viewport.Width, viewport.Height, 0, 0, 1);
             }
         }
-        public void Draw(Texture2D texture, Num.Matrix3x2? world = null, Num.Matrix3x2? source = null) {
+        public void Draw(Texture2D texture, Num.Matrix3x2? world = null, Num.Matrix3x2? source = null, Color? color = null) {
             if (_texture != texture) {
                 _texture = texture;
                 Flush();
@@ -90,22 +90,22 @@ namespace Apos.Batch {
 
             _vertices[_vertexCount + 0] = new VertexPositionColorTexture(
                 new Vector3(wTopLeft.X, wTopLeft.Y, 0f),
-                Color.White,
+                color ?? Color.White,
                 GetUV(texture, topLeft)
             );
             _vertices[_vertexCount + 1] = new VertexPositionColorTexture(
                 new Vector3(wTopRight.X, wTopRight.Y, 0f),
-                Color.White,
+                color ?? Color.White,
                 GetUV(texture, topRight)
             );
             _vertices[_vertexCount + 2] = new VertexPositionColorTexture(
                 new Vector3(wBottomRight.X, wBottomRight.Y, 0f),
-                Color.White,
+                color ?? Color.White,
                 GetUV(texture, bottomRight)
             );
             _vertices[_vertexCount + 3] = new VertexPositionColorTexture(
                 new Vector3(wBottomLeft.X, wBottomLeft.Y, 0f),
-                Color.White,
+                color ?? Color.White,
                 GetUV(texture, bottomLeft)
             );
 
