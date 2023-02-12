@@ -13,6 +13,7 @@ This library is meant to replace the MonoGame SpriteBatch.
 ## Features
 * Automatically resizes the batch to draw even more sprites at once.
 * The world matrix is done with a 3x2 matrix.
+* Source matrix for sprite sheets is done with a 3x2 matrix.
 
 ## Usage Example
 Enable HiDef and create the batcher:
