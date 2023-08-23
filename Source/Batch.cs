@@ -57,7 +57,7 @@ namespace Apos.Batch {
             }
 
             EnsureSizeOrDouble(ref _vertices, _vertexCount + 4);
-            if (EnsureSizeOrDouble(ref _indices, _indexCount + 6)) {
+            if (EnsureSizeOrDouble(ref _indices, _indexCount + 6) && !_indicesChanged) {
                 _fromIndex = _indexCount;
                 _indicesChanged = true;
             }
