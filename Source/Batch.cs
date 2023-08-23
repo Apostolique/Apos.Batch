@@ -17,7 +17,7 @@ namespace Apos.Batch {
             _vertices = new VertexPositionColorTexture[_initialVertices];
             _indices = new uint[_initialIndices];
 
-            GenerateIndexArray(ref _indices, 0);
+            GenerateIndexArray();
 
             _vertexBuffer = new DynamicVertexBuffer(_graphicsDevice, typeof(VertexPositionColorTexture), _vertices.Length, BufferUsage.WriteOnly);
 
@@ -57,10 +57,7 @@ namespace Apos.Batch {
             }
 
             EnsureSizeOrDouble(ref _vertices, _vertexCount + 4);
-            if (EnsureSizeOrDouble(ref _indices, _indexCount + 6) && !_indicesChanged) {
-                _fromIndex = _indexCount;
-                _indicesChanged = true;
-            }
+            _indicesChanged = EnsureSizeOrDouble(ref _indices, _indexCount + 6);
 
             // TODO: world shouldn't be null.
             if (world == null) {
@@ -132,7 +129,7 @@ namespace Apos.Batch {
 
                 _vertexBuffer = new DynamicVertexBuffer(_graphicsDevice, typeof(VertexPositionColorTexture), _vertices.Length, BufferUsage.WriteOnly);
 
-                GenerateIndexArray(ref _indices, _fromIndex);
+                GenerateIndexArray();
 
                 _indexBuffer = new IndexBuffer(_graphicsDevice, typeof(uint), _indices.Length, BufferUsage.WriteOnly);
                 _indexBuffer.SetData(_indices);
@@ -178,17 +175,18 @@ namespace Apos.Batch {
             return new Vector2(xy.X / texture.Width, xy.Y / texture.Height);
         }
 
-        private void GenerateIndexArray(ref uint[] array, int index = 0) {
-            uint i = Floor(index, 6, 6);
-            uint j = Floor(index, 6, 4);
-            for (; i < array.Length; i += 6, j += 4) {
-                array[i + 0] = j + 0;
-                array[i + 1] = j + 1;
-                array[i + 2] = j + 3;
-                array[i + 3] = j + 1;
-                array[i + 4] = j + 2;
-                array[i + 5] = j + 3;
+        private void GenerateIndexArray() {
+            uint i = Floor(_fromIndex, 6, 6);
+            uint j = Floor(_fromIndex, 6, 4);
+            for (; i < _indices.Length; i += 6, j += 4) {
+                _indices[i + 0] = j + 0;
+                _indices[i + 1] = j + 1;
+                _indices[i + 2] = j + 3;
+                _indices[i + 3] = j + 1;
+                _indices[i + 4] = j + 2;
+                _indices[i + 5] = j + 3;
             }
+            _fromIndex = _indices.Length;
         }
         private uint Floor(int value, int div, uint mul) {
             return (uint)MathF.Floor((float)value / div) * mul;
