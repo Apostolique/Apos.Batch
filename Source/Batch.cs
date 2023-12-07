@@ -57,7 +57,7 @@ namespace Apos.Batch {
             }
 
             EnsureSizeOrDouble(ref _vertices, _vertexCount + 4);
-            _indicesChanged = EnsureSizeOrDouble(ref _indices, _indexCount + 6);
+            _indicesChanged = EnsureSizeOrDouble(ref _indices, _indexCount + 6) || _indicesChanged;
 
             // TODO: world shouldn't be null.
             if (world == null) {
