@@ -62,5 +62,5 @@ monodroid*.msi
 *.VC.db
 *.VC.opendb
 
-dist
-artifacts
+apos-docs/
+artifacts/
