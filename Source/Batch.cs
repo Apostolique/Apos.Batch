@@ -52,8 +52,8 @@ namespace Apos.Batch {
         }
         public void Draw(Texture2D texture, Num.Matrix3x2? world = null, Num.Matrix3x2? source = null, Color? color = null) {
             if (_texture != texture) {
-                _texture = texture;
                 Flush();
+                _texture = texture;
             }
 
             EnsureSizeOrDouble(ref _vertices, _vertexCount + 4);
@@ -176,9 +176,7 @@ namespace Apos.Batch {
         }
 
         private void GenerateIndexArray() {
-            uint i = Floor(_fromIndex, 6, 6);
-            uint j = Floor(_fromIndex, 6, 4);
-            for (; i < _indices.Length; i += 6, j += 4) {
+            for (uint i = _fromIndex, j = _fromVertex; i < _indices.Length; i += 6, j += 4) {
                 _indices[i + 0] = j + 0;
                 _indices[i + 1] = j + 1;
                 _indices[i + 2] = j + 3;
@@ -186,10 +184,8 @@ namespace Apos.Batch {
                 _indices[i + 4] = j + 2;
                 _indices[i + 5] = j + 3;
             }
-            _fromIndex = _indices.Length;
-        }
-        private uint Floor(int value, int div, uint mul) {
-            return (uint)MathF.Floor((float)value / div) * mul;
+            _fromIndex = (uint)_indices.Length;
+            _fromVertex = (uint)_vertices.Length;
         }
 
         private const int _initialSprites = 2048;
@@ -197,7 +193,7 @@ namespace Apos.Batch {
         private const int _initialVertices = _initialSprites * 4;
         private const int _initialIndices = _initialSprites * 6;
 
-        private GraphicsDevice _graphicsDevice;
+        private readonly GraphicsDevice _graphicsDevice;
         private RasterizerState _rasterizerState = new RasterizerState {
             CullMode = CullMode.None
         };
@@ -214,12 +210,13 @@ namespace Apos.Batch {
 
         private Matrix _view;
         private Matrix _projection;
-        private Effect _defaultEffect;
-        private EffectPass _defaultPass;
+        private readonly Effect _defaultEffect;
+        private readonly EffectPass _defaultPass;
         private Effect _effect;
         private bool _customEffect = false;
 
         private bool _indicesChanged = false;
-        private int _fromIndex = 0;
+        private uint _fromIndex = 0;
+        private uint _fromVertex = 0;
     }
 }
