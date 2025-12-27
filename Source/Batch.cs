@@ -47,7 +47,7 @@ namespace Apos.Batch {
                 _projection = projection.Value;
             } else {
                 Viewport viewport = _graphicsDevice.Viewport;
-                _projection = Matrix.CreateOrthographicOffCenter(viewport.X, viewport.Width, viewport.Height, viewport.Y, 0, 1);
+                _projection = Matrix.CreateOrthographicOffCenter(0, viewport.Width, viewport.Height, 0, 0, 1);
             }
         }
         public void Draw(Texture2D texture, Num.Matrix3x2? world = null, Num.Matrix3x2? source = null, Color? color = null) {
