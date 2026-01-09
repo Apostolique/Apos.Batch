@@ -37,7 +37,7 @@ namespace GameProject {
             _random = new Random();
             _fps = new FPSCounter();
 
-            _fontSystem = FontSystemFactory.Create(GraphicsDevice, 2048, 2048);
+            _fontSystem = new FontSystem();
             _fontSystem.AddFont(TitleContainer.OpenStream($"{Content.RootDirectory}/source-code-pro-medium.ttf"));
             _font = _fontSystem.GetFont(24);
         }
@@ -58,7 +58,7 @@ namespace GameProject {
             GraphicsDevice.Clear(Color.Black);
 
             _b.Begin();
-            _b.Draw(_apos, Matrix32.CreateTranslation(GraphicsDevice.PresentationParameters.BackBufferWidth / 2f, GraphicsDevice.PresentationParameters.BackBufferHeight / 2f), Matrix32.CreateScale(60, 60));
+            _b.Draw(_apos, Matrix3x2.CreateTranslation(GraphicsDevice.PresentationParameters.BackBufferWidth / 2f, GraphicsDevice.PresentationParameters.BackBufferHeight / 2f), Matrix3x2.CreateScale(60, 60));
             // for (int i = 0; i < 20000; i++) {
             //     _b.Draw(_apos, Matrix32.CreateTranslation(_random.Next(0, GraphicsDevice.PresentationParameters.BackBufferWidth), _random.Next(0, GraphicsDevice.PresentationParameters.BackBufferHeight)));
             // }

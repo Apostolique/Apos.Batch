@@ -1,8 +1,8 @@
-using Num = System.Numerics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Microsoft.Xna.Framework.Content;
+using MonoGame.Extended;
 
 namespace Apos.Batch {
     public class Batch {
@@ -50,7 +50,7 @@ namespace Apos.Batch {
                 _projection = Matrix.CreateOrthographicOffCenter(0, viewport.Width, viewport.Height, 0, 0, 1);
             }
         }
-        public void Draw(Texture2D texture, Num.Matrix3x2? world = null, Num.Matrix3x2? source = null, Color? color = null) {
+        public void Draw(Texture2D texture, Matrix3x2? world = null, Matrix3x2? source = null, Color? color = null) {
             if (_texture != texture) {
                 Flush();
                 _texture = texture;
@@ -61,29 +61,29 @@ namespace Apos.Batch {
 
             // TODO: world shouldn't be null.
             if (world == null) {
-                world = Num.Matrix3x2.Identity;
+                world = Matrix3x2.Identity;
             }
 
-            Num.Vector2 topLeft;
-            Num.Vector2 topRight;
-            Num.Vector2 bottomRight;
-            Num.Vector2 bottomLeft;
+            Vector2 topLeft;
+            Vector2 topRight;
+            Vector2 bottomRight;
+            Vector2 bottomLeft;
             if (source == null) {
-                topLeft = new Num.Vector2(0, 0);
-                topRight = new Num.Vector2(texture.Width, 0);
-                bottomRight = new Num.Vector2(texture.Width, texture.Height);
-                bottomLeft = new Num.Vector2(0, texture.Height);
+                topLeft = new Vector2(0, 0);
+                topRight = new Vector2(texture.Width, 0);
+                bottomRight = new Vector2(texture.Width, texture.Height);
+                bottomLeft = new Vector2(0, texture.Height);
             } else {
-                topLeft = Num.Vector2.Transform(new Num.Vector2(0f, 0f), source.Value);
-                topRight = Num.Vector2.Transform(new Num.Vector2(1f, 0f), source.Value);
-                bottomRight = Num.Vector2.Transform(new Num.Vector2(1f, 1f), source.Value);
-                bottomLeft = Num.Vector2.Transform(new Num.Vector2(0, 1f), source.Value);
+                topLeft = Vector2.Transform(new Vector2(0f, 0f), source.Value);
+                topRight = Vector2.Transform(new Vector2(1f, 0f), source.Value);
+                bottomRight = Vector2.Transform(new Vector2(1f, 1f), source.Value);
+                bottomLeft = Vector2.Transform(new Vector2(0, 1f), source.Value);
             }
 
-            Num.Vector2 wTopLeft = Num.Vector2.Transform(topLeft, world.Value);
-            Num.Vector2 wTopRight = Num.Vector2.Transform(topRight, world.Value);
-            Num.Vector2 wBottomRight = Num.Vector2.Transform(bottomRight, world.Value);
-            Num.Vector2 wBottomLeft = Num.Vector2.Transform(bottomLeft, world.Value);
+            Vector2 wTopLeft = Vector2.Transform(topLeft, world.Value);
+            Vector2 wTopRight = Vector2.Transform(topRight, world.Value);
+            Vector2 wBottomRight = Vector2.Transform(bottomRight, world.Value);
+            Vector2 wBottomLeft = Vector2.Transform(bottomLeft, world.Value);
 
             _vertices[_vertexCount + 0] = new VertexPositionColorTexture(
                 new Vector3(wTopLeft.X, wTopLeft.Y, 0f),
@@ -171,7 +171,7 @@ namespace Apos.Batch {
             return false;
         }
 
-        private Vector2 GetUV(Texture2D texture, Num.Vector2 xy) {
+        private Vector2 GetUV(Texture2D texture, Vector2 xy) {
             return new Vector2(xy.X / texture.Width, xy.Y / texture.Height);
         }
 

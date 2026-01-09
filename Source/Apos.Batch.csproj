@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
 
     <PackageId>Apos.Batch</PackageId>
@@ -10,7 +10,7 @@
 
     <Authors>Jean-David Moisan</Authors>
     <Company>Vyne Enterprise Inc.</Company>
-    <Copyright>Copyright 2023</Copyright>
+    <Copyright>Copyright 2026</Copyright>
 
     <RepositoryUrl>https://github.com/Apostolique/Apos.Batch</RepositoryUrl>
     <PackageProjectUrl>https://github.com/Apostolique/Apos.Batch</PackageProjectUrl>
@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.DesktopGL" PrivateAssets="All" Version="3.8.0.1641" />
+    <PackageReference Include="MonoGame.Extended" Version="5.3.1" />
   </ItemGroup>
 
   <ItemGroup>
